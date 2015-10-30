@@ -103,15 +103,17 @@ body
 	width: 80%;
 	display: block;
 	margin: auto;
-	margin-top: 30px;
+	margin-top: 10px;
 }
 
 .form-header
 {
 	text-align: center;
-	font-size: 40px;
+	font-size: 42px;
 	font-family:"Myriad Web Pro";
 	color:rgb(166,43,28);
+	position: relative;
+	top: -15px;
 }
 
 form
@@ -148,13 +150,14 @@ form
 	height: 40px;
 	width: 80%;
 	border-radius: 20px;
-	-webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
+	-webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
 	background-color: white;
 	display: block; 
 	margin: auto;
 	position: relative;
 	top: 40px;
+	overflow:hidden;
 }
 
 .user_input
@@ -163,9 +166,9 @@ form
 	border:none;
 	font-size: 14px;
 	position: relative;
-	left: 20px;
-	top: 8px;
-	width: 90%;
+	left: 15px;
+	top: -8px;
+	width: 85%;
 }
 
 .search-wrap
@@ -175,6 +178,7 @@ form
 	width: 800px;
 	display: block;
 	margin: auto;
+	border-radius: 20px;
 	-webkit-border-radius: 50px;
     -moz-border-radius: 50px;
 	margin-top: -40px;
@@ -202,3 +206,61 @@ a
 {
 	display: block;
 	margin:auto;
+}
+
+.review-box
+{
+	width: 450px;
+	height: 400px;
+	background-color:#DDD;
+	-webkit-border-radius: 8px; 
+	-moz-border-radius: 8px;
+	 border-radius: 8px; 
+	 display: block;
+	 padding: 40px;
+	 margin: auto;
+}
+
+.search_textbox button
+{
+	position: relative;
+	height: 50px;
+	width: 75px;
+	left: 20px;
+	bottom: 5px;
+	
+	box-shadow: none;
+	text-shadow: none;
+	border: none;
+	
+	box-shadow:inset 0px 1px 0px 0px #cf866c;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #d0451b), color-stop(1, #bc3315));
+	background:-moz-linear-gradient(top, #d0451b 5%, #bc3315 100%);
+	background:-webkit-linear-gradient(top, #d0451b 5%, #bc3315 100%);
+	background:-o-linear-gradient(top, #d0451b 5%, #bc3315 100%);
+	background:-ms-linear-gradient(top, #d0451b 5%, #bc3315 100%);
+	background:linear-gradient(to bottom, #d0451b 5%, #bc3315 100%);
+}
+
+.search_textbox button:hover, .search_textbox button:active
+{
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #bc3315), color-stop(1, #d0451b));
+	background:-moz-linear-gradient(top, #bc3315 5%, #d0451b 100%);
+	background:-webkit-linear-gradient(top, #bc3315 5%, #d0451b 100%);
+	background:-o-linear-gradient(top, #bc3315 5%, #d0451b 100%);
+	background:-ms-linear-gradient(top, #bc3315 5%, #d0451b 100%);
+	background:linear-gradient(to bottom, #bc3315 5%, #d0451b 100%);
+	box-shadow: none;
+	text-shadow: none;
+	border: none;
+}
+
+
+
+.search_textbox button img
+{
+	height: 20px;
+	width: 20px;
+	position: relative;
+	right: 5px;
+}

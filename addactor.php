@@ -3,6 +3,8 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Nassjoy Database</title>
+<script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="jquery.mask.js"></script>
 <LINK REL=StyleSheet HREF="main.css" TYPE="text/css" MEDIA=screen>
 </head>
 
@@ -29,6 +31,11 @@ function toggleSex()
 		document.getElementById("addActor").style.display = "none"; 
 	}
 }
+
+function dateForm(obj)
+{
+	$(obj).mask('00/00/0000');		
+}
 </script>
 <?php include "header.php" ?>
 <div id="content">
@@ -48,8 +55,8 @@ Add </td><td><select onchange="toggleSex()" id="AOD" name="AOD"><option value="A
 <tr><td>First Name: </td><td><input id="first" name="first" type="text" /></td></tr>
 <tr><td>Last Name:</td> <td><input id="last" name="last" type="text" /></td></tr>
 <tr id="sex-div"><td>Sex: </td><td><select id="sex" name="sex"><option value="M" selected="selected">Male</option><option value="F">Female</option></select></td></tr>
-<tr><td>Date of Birth: </td><td><input id="dob" name="dob" type="date" /></td></tr>
-<tr><td>Date of Death: </td><td><input id="dob" name="dob" type="date" /></td></tr>
+<tr><td>Date of Birth <br /><span style="font-size:10px">(MM/DD/YYYY)</span>: </td><td><input id="dob" name="dob" type="date" onfocus="dateForm(this)" /></td></tr>
+<tr><td>Date of Death <br /><span style="font-size:10px">(MM/DD/YYYY)</span>: </td><td><input id="dob" name="dob" type="date" onfocus="dateForm(this)"/></td></tr>
 </table>
 <br />
 <div class="submit">
