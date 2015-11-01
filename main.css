@@ -264,3 +264,15 @@ a
 	position: relative;
 	right: 5px;
 }
+
+.genre
+{
+	width: 100%;
+	position: relative;
+	left: 20px;
+}
+
+.genre td
+{
+	width: 80px;
+}
