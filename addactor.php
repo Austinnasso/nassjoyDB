@@ -81,10 +81,12 @@ function testName($name) {
 		return 1;
 	if(strlen($name)>20)
 		return 1;
-	else {
-		if(preg_match('/[a-zA-Z\'-]*/', $name) {
+	else 
+	{
+		$matches;
+		preg_match('/^[a-zA-Z\'-]*$/', $name, $matches);
+		if (!empty($matches[0]))
 			return 0;
-		}
 		else
 			return 1;
 	}
@@ -105,19 +107,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	if ($table == "Actor" || $table == "Director")
 	{
 		
-		if (!empty($_POST['first'])) {
-			$first = test_input($_POST['first']);
-			$first_err=testName($first); 
-		}
-		else
-			$first_err = 1;
-		$first_err=testName()
-		if (!empty($_POST['last'])) {
-			$last = test_input($_POST['last']);
-			$last_err=testName($last);
-		}
-		else
-			$last_err = 1;
+		$first = test_input($_POST['first']);
+		$first_err=testName($first); 
+	
+		$last = test_input($_POST['last']);
+		$last_err=testName($last);
+		
 			
 		if ($table=="Actor")
 			$sex = $_POST['sex'];

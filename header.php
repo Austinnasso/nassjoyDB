@@ -62,7 +62,7 @@ function blurTextGlow(obj)
 
 <div class="search-wrap">
 <div class="search_textbox">
-<form id="search">
+<form id="search" method="get" action="index.php">
 <input class="user_input" id="search_bar" type="text" name="search_bar" value="Search movies, actors, directors and more..." onblur="blurTextGlow(this); if(this.value==''){ this.value='Search movies, actors, directors and more...'; this.style.color='#BBB';}" onfocus="focusTextGlow(this); if(this.value=='Search movies, actors, directors and more...'){this.value=''; this.style.color='#000';}" onmouseover="this.style.color='#000';" onmouseout="if(this.value=='Search movies, actors, directors and more...'){this.style.color='#BBB'}"/>
 <button type="submit"><img src="img/search.png" /></button>
 </form>

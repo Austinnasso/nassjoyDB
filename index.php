@@ -9,6 +9,22 @@
 <body>
 <?php include "header.php" ?>
 
+<h1> 
+<?php
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET')
+{
+	
+	$raw_input = explode(" ", $_GET['search_bar']); 
+	foreach ($raw_input as $x)
+		echo $x . " AND"; 
+	
+	
+}
+
+?>
+</h1>
+
 </div>
 
 
