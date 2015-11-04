@@ -34,7 +34,7 @@ function toggleSex()
 		document.getElementById("addMovie").style.display = "none";
 		document.getElementById("addActor").style.display = "inline-block"; 
 		document.getElementById("AOD").value = "Director";
-		document.getElementById("form-wrap-id").style.height = "350px";
+		document.getElementById("form-wrap-id").style.height = "400px";
 	}
 	else if (type == "Actor")
 	{
@@ -42,7 +42,7 @@ function toggleSex()
 		document.getElementById("addMovie").style.display = "none";
 		document.getElementById("addActor").style.display = "inline-block";
 		document.getElementById("AOD").value = "Actor";
-		document.getElementById("form-wrap-id").style.height = "350px";
+		document.getElementById("form-wrap-id").style.height = "400px";
 	}
 	else if (type == "Movie")
 	{
@@ -80,11 +80,14 @@ function dateFormat($date)
 //1. MAKE SURE ONLY ALPHABETICAL CHARACTERS, SPACES, AND APOSTROPHES ARE USED
 //2. MAKE SURE DOB PRECEDES DOD
 //3. MAKE SURE NAME HAS AT LEAST ONE CHARACTER
+$post = 0; 
+$success = 0;
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	$table = $_POST['type'];
-
-	$first_err = $last_err = $dob_err = $title_err = $year_err = $company_err = $rating_err = $genre_err = $success = 0;
+	$post = 1;
+	$success_msg = "";
+	$first_err = $last_err = $dob_err = $title_err = $year_err = $company_err = $rating_err = $genre_err;
 	if ($table == "Actor" || $table == "Director")
 	{
 		
@@ -139,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		
 		
 		//INSERT IF NO ERROR
-		if (!$dod_err &&  !$last_err && !$first_err)
+		if (!$dod_err &&  !$last_err && !$first_err && !$dob_err) 
 		{
 			$sql = "SELECT id FROM MaxPersonID"; 
 			$rs = mysql_query($sql, $db_connection);
@@ -210,6 +213,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			if (!$result) {
     			die('Invalid query: ' . mysql_error());
 			}
+			else
+			{
+				$success = 1;
+				if ($_POST['type'] == 'Actor')
+					$success_msg = "Actor successfully inserted!";
+				else
+					$success_msg = "Director successfully inserted!";
+			}
 	
 			//IF PERSON ISN'T ALREADY IN DB, ADD TO EXISTING MAXID
 			if (!$alreadyExists)
@@ -223,8 +234,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			}
 		}
 		
-		else 
-			echo "Incorrect input.";
 		
 		
 		
@@ -268,8 +277,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				echo $sql; 
 				
 			$result = mysql_query($sql, $db_connection);
-			if (!$result) {
+			if (!$result)
     			die('Invalid query: ' . mysql_error());
+			else 
+			{
+				$success = 1;
+				$success_msg = "Movie successfully inserted!";
+			}
 				
 			//UPDATE MAXID
 			$sql = "UPDATE MaxMovieID SET id='{$maxID}' WHERE id='{$prevMax}'";
@@ -310,7 +324,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		
 		
 	}	
-}
+
 
 ?>
 <div id="content">
@@ -335,6 +349,15 @@ Add </td><td><select onchange="toggleSex()" id="type" name="type"><option value=
 <tr><td>Date of Death <br /><span style="font-size:10px">(MM/DD/YYYY)</span>: </td><td><input id="dod" name="dod" type="text" onfocus="dateForm(this)"/></td></tr>
 </table>
 <input type="hidden" id="AOD" name="type" value="Actor" />
+<?php 
+
+if (!$success && $post)
+	echo '<p id="ad_error" style="color: red">*Invalid input. Try Again.</p>'; 
+else 
+	echo'<p id="ad_success" style="color:green">' . $success_msg . '</p>';
+
+
+?>
 <br />
 <div class="submit">
 <button type="submit">Insert</button>

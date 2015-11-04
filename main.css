@@ -69,7 +69,7 @@ body
 	display: block;
 	margin: auto;
 	margin-top: 0;
-	height: 1200px;
+	height: 1600px;
 	padding: 0;
 	-webkit-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.64);
 	-moz-box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.64);
@@ -88,7 +88,7 @@ body
 .form-wrap
 {
 	width: 350px;
-	height: 350px;
+	height: 400px;
 	background-color:#DDD;
 	-webkit-border-radius: 8px; 
 	-moz-border-radius: 8px;
