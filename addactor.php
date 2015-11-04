@@ -330,23 +330,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		//actor or director exists. If doesn't exist, display a message "Actor doesn't match our records.", "Director doesn't match our records.",
 		//and/or "Movie doesn't match our records." If actor, director, and movie exist, grab their IDs and insert
 		//tuple into MovieActor and MovieDirector tables respectively. 
-		$first = test_input($_POST['first']);
+		$first = test_input($_POST['a_first']);
 		$first_err=testName($first); 
 		
-		$last = test_input($_POST['last']);
+		$last = test_input($_POST['a_last']);
 		$last_err=testName($last);
 		$success_msg2 = "";
 		$error_msg2 = "";
 		$post2=1;
 		$id_actor_director=$id_movie;
-		$role;
+		$role=test_input($_POST['a_role']);
 		$check_movie=$check_actor_director=0;
 		if(!$first_err&&!$last_err) {
 			$title = $_POST['a_title'];
 			//person exist
 			$aod=$_POST['aod'];
 			if($aod=='Actor') {
-				$sql="SELECT * FROM Actor WHERE first='{$first}' AND last='{$last}'"
+				$sql="SELECT * FROM Actor WHERE first='{$first}' AND last='{$last}'";
 				$result = mysql_query($sql, $db_connection);
 				if (!$result) {
 					$error_msg2="Actor doesn't exist!";
@@ -354,7 +354,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				}
 			}
 			else if($aod=='Director') {
-				$sql="SELECT * FROM Director WHERE first='{$first}' AND last='{$last}'"
+				$sql="SELECT * FROM Director WHERE first='{$first}' AND last='{$last}'";
 				$result = mysql_query($sql, $db_connection);
 				if (!$result) {
 					$error_msg2="Director doesn't exist!";
@@ -371,7 +371,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			if(!$check_movie&&!$check_actor_director) {
 				//check if person exists in movie
 				if($aod=='Director') {
-					$sql="SELECT mid FROM MovieDirector WHERE did=(SELECT id FROM Director WHERE first='{$first}' AND last='{$last}')"
+					$sql="SELECT mid FROM MovieDirector WHERE did=(SELECT id FROM Director WHERE first='{$first}' AND last='{$last}')";
 					$result = mysql_query($sql, $db_connection);
 					if($result) {
 						$error_msg2="Director already exists in the specified movie!";
@@ -379,7 +379,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 					}
 				}
 				if($aod=='Actor') {
-					$sql="SELECT mid FROM MovieActor WHERE aid=(SELECT id FROM Actor WHERE first='{$first}' AND last='{$last}')"
+					$sql="SELECT mid FROM MovieActor WHERE aid=(SELECT id FROM Actor WHERE first='{$first}' AND last='{$last}')";
 					$result = mysql_query($sql, $db_connection);
 					if($result) {
 						$error_msg2="Actor already exists in the specified movie!";
@@ -389,11 +389,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				if(!$check_actor_director&&$aod=='Actor') {
 					$sql_getMovie="SELECT id FROM Movie WHERE title='{$title}'";
 					$value_mid=mysql_fetch_object(mysql_query($sql_getMovie));
-					$sql_getActor="SELECT id From Actor WHERE first='{$first}' AND last='{$last}'"
+					$sql_getActor="SELECT id From Actor WHERE first='{$first}' AND last='{$last}'";
 					$value_aid=mysql_fetch_object(mysql_query($sql_getActor));
 					$id_movie=$value_mid->id;
 					$id_actor_director=$value_aid->id;
-					$sql = "INSERT INTO MovieActor (mid, aid, role) VALUES ('{$id_movie}', '{$id_actor_director}', '')";
+					
+					$sql = "INSERT INTO MovieActor (mid, aid, role) VALUES ('{$id_movie}', '{$id_actor_director}', '{$role}')";
 					$result = mysql_query($sql, $db_connection);
 					if (!$result) {
 						die('Invalid query: ' . mysql_error());
@@ -404,7 +405,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				if(!$check_actor_director&&$aod=='Director') {
 					$sql_getMovie="SELECT id FROM Movie WHERE title='{$title}'";
 					$value_mid=mysql_fetch_object(mysql_query($sql_getMovie));
-					$sql_getDirector="SELECT id From Director WHERE first='{$first}' AND last='{$last}'"
+					$sql_getDirector="SELECT id From Director WHERE first='{$first}' AND last='{$last}'";
 					$value_did=mysql_fetch_object(mysql_query($sql_getDirector));
 					$id_movie=$value_mid->id;
 					$id_actor_director=$value_did->id;
@@ -495,7 +496,7 @@ else
 </div>
 </div>
 
-<div class="form-wrap" id="form-wrap-id2" style="height: 250px; display: block; margin-top: 40px;">
+<div class="form-wrap" id="form-wrap-id2" style="height: 300px; display: block; margin-top: 40px;">
 <h1 class="form-header">Add to Movie</h1>
 <div class="inner-form-wrap">
 <form method="post" name="addToMovie" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>">
@@ -504,6 +505,7 @@ else
 <tr><td>First Name: </td><td><input id="a_first" name="first" type="text" /></td></tr>
 <tr><td>Last Name:</td> <td><input id="a_last" name="last" type="text" /></td></tr>
 <tr><td>Movie Title:</td> <td><input id="a_title" name="title" type="text" /></td></tr>
+<tr><td>Role:</td> <td><input id="a_role" name="role" type="text" /></td></tr>
 </table>
 <input type="hidden" name="type" value="AddToMovie" />
 <div class="submit">
