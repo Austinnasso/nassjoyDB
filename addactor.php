@@ -419,6 +419,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				}
 			}
 		}
+		else {
+			$error_msg2="*Invalid input. Try Again.";
+			$success2=0;
+		}
 	}
 }
 ?>
