@@ -96,17 +96,17 @@ function testName($name) {
 //1. MAKE SURE ONLY ALPHABETICAL CHARACTERS, SPACES, AND APOSTROPHES ARE USED
 //2. MAKE SURE DOB PRECEDES DOD
 //3. MAKE SURE NAME HAS AT LEAST ONE CHARACTER
-$post = 0; 
-$success = 0;
+$post = $post2 = 0; 
+$success = $success2 = 0;
 if ($_SERVER['REQUEST_METHOD'] == 'POST')
 {
 	$table = $_POST['type'];
-	$post = 1;
+	
 	$success_msg = "";
 	$first_err = $last_err = $dob_err = $title_err = $year_err = $company_err = $rating_err = $genre_err;
 	if ($table == "Actor" || $table == "Director")
 	{
-		
+		$post = 1;
 		$first = test_input($_POST['first']);
 		$first_err=testName($first); 
 	
@@ -246,36 +246,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     			die('Invalid query: ' . mysql_error());
 			}
 		}
-		
-		
-		
-		
-		
-		
 	}
 	
 	else if ($table == "Movie")
 	{
+		$post = 1;
 		if (!empty($_POST['title']))
 			$title = test_input($_POST['title']); 
 		else
 			$title_err = 1;
-			
+
 		$rating = $_POST['rating'];
-			
+
 		if (!empty($_POST['company']))
 			$company = test_input($_POST['company']); 
 		else
 			$company_err = 1;
-			
+
 		
 		if (!empty($_POST['year']) && strlen($_POST['year']) == 4)
 			$year = test_input($_POST['year']); 
 		else
 			$year_err = 1; 
 		
-			
-			
+
+
 		if (!$year_err && !$title_err && !$company_err)
 		{
 			$sql = "SELECT id FROM MaxMovieID"; 
@@ -288,44 +283,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			$sql = "INSERT INTO Movie (id, title, year, rating, company) VALUES ('{$maxID}', '{$title}', '{$year}', '{$rating}', '{$company}')";
 			if ($debug)
 				echo $sql; 
-				
+
 			$result = mysql_query($sql, $db_connection);
 			if (!$result)
-    			die('Invalid query: ' . mysql_error());
+				die('Invalid query: ' . mysql_error());
 			else 
 			{
 				$success = 1;
 				$success_msg = "Movie successfully inserted!";
 			}
-				
+
 			//UPDATE MAXID
 			$sql = "UPDATE MaxMovieID SET id='{$maxID}' WHERE id='{$prevMax}'";
-				mysql_query($sql, $db_connection);
-			} 
-			
+			mysql_query($sql, $db_connection);
+		} 
+
 			//ADD GENRES
-			for ($x=1; $x<19; $x++)
+		for ($x=1; $x<19; $x++)
+		{
+			$index = "g" . $x; 
+			if (!$_POST[$index])
+				continue;
+			else
 			{
-				$index = "g" . $x; 
-				if (!$_POST[$index])
-					continue;
-				else
-				{
-					$genre = $_POST[$index];
-					$sql = "INSERT INTO MovieGenre (mid, genre) VALUES ('{$maxID}', '{$genre}')";
-					$result = mysql_query($sql, $db_connection);
-					if (!$result) {
-    					die('Invalid query: ' . mysql_error());
-					} 
-					
-				}
-					
-				
-				
+				$genre = $_POST[$index];
+				$sql = "INSERT INTO MovieGenre (mid, genre) VALUES ('{$maxID}', '{$genre}')";
+				$result = mysql_query($sql, $db_connection);
+				if (!$result) {
+					die('Invalid query: ' . mysql_error());
+				} 
+
 			}
+
+
+
 		}
 	}
-	else if ($_POST['type'] == 'AddToMovie')
+	else if ($table == 'AddToMovie')
 	{
 		//$_POST['aod'] returns 'Actor' OR 'Director
 		//$_POST['a_first'] returns first name raw input
@@ -336,13 +330,96 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		//actor or director exists. If doesn't exist, display a message "Actor doesn't match our records.", "Director doesn't match our records.",
 		//and/or "Movie doesn't match our records." If actor, director, and movie exist, grab their IDs and insert
 		//tuple into MovieActor and MovieDirector tables respectively. 
-
-
-
-
-
-
+		$first = test_input($_POST['first']);
+		$first_err=testName($first); 
+		
+		$last = test_input($_POST['last']);
+		$last_err=testName($last);
+		$success_msg2 = "";
+		$error_msg2 = "";
+		$post2=1;
+		$id_actor_director=$id_movie;
+		$role;
+		$check_movie=$check_actor_director=0;
+		if(!$first_err&&!$last_err) {
+			$title = $_POST['a_title'];
+			//person exist
+			$aod=$_POST['aod'];
+			if($aod=='Actor') {
+				$sql="SELECT * FROM Actor WHERE first='{$first}' AND last='{$last}'"
+				$result = mysql_query($sql, $db_connection);
+				if (!$result) {
+					$error_msg2="Actor doesn't exist!";
+					$check_actor_director=1;
+				}
+			}
+			else if($aod=='Director') {
+				$sql="SELECT * FROM Director WHERE first='{$first}' AND last='{$last}'"
+				$result = mysql_query($sql, $db_connection);
+				if (!$result) {
+					$error_msg2="Director doesn't exist!";
+					$check_actor_director=1;
+				}
+			}
+			//movie exist
+			$sql="SELECT * FROM Movie WHERE title='{$title}'";
+			$result = mysql_query($sql, $db_connection);
+			if (!$result) {
+				$error_msg2="Actor doesn't exist!";
+				$check_movie=1;
+			}
+			if(!$check_movie&&!$check_actor_director) {
+				//check if person exists in movie
+				if($aod=='Director') {
+					$sql="SELECT mid FROM MovieDirector WHERE did=(SELECT id FROM Director WHERE first='{$first}' AND last='{$last}')"
+					$result = mysql_query($sql, $db_connection);
+					if($result) {
+						$error_msg2="Director already exists in the specified movie!";
+						$check_actor_director=1;
+					}
+				}
+				if($aod=='Actor') {
+					$sql="SELECT mid FROM MovieActor WHERE aid=(SELECT id FROM Actor WHERE first='{$first}' AND last='{$last}')"
+					$result = mysql_query($sql, $db_connection);
+					if($result) {
+						$error_msg2="Actor already exists in the specified movie!";
+						$check_actor_director=1;
+					}
+				}
+				if(!$check_actor_director&&$aod=='Actor') {
+					$sql_getMovie="SELECT id FROM Movie WHERE title='{$title}'";
+					$value_mid=mysql_fetch_object(mysql_query($sql_getMovie));
+					$sql_getActor="SELECT id From Actor WHERE first='{$first}' AND last='{$last}'"
+					$value_aid=mysql_fetch_object(mysql_query($sql_getActor));
+					$id_movie=$value_mid->id;
+					$id_actor_director=$value_aid->id;
+					$sql = "INSERT INTO MovieActor (mid, aid, role) VALUES ('{$id_movie}', '{$id_actor_director}', '')";
+					$result = mysql_query($sql, $db_connection);
+					if (!$result) {
+						die('Invalid query: ' . mysql_error());
+					}
+					else
+						$success2=1; 
+				}
+				if(!$check_actor_director&&$aod=='Director') {
+					$sql_getMovie="SELECT id FROM Movie WHERE title='{$title}'";
+					$value_mid=mysql_fetch_object(mysql_query($sql_getMovie));
+					$sql_getDirector="SELECT id From Director WHERE first='{$first}' AND last='{$last}'"
+					$value_did=mysql_fetch_object(mysql_query($sql_getDirector));
+					$id_movie=$value_mid->id;
+					$id_actor_director=$value_did->id;
+					$sql = "INSERT INTO MovieDirector (mid, did) VALUES ('{$id_movie}', '{$id_actor_director}')";
+					$result = mysql_query($sql, $db_connection);
+					if (!$result) {
+						die('Invalid query: ' . mysql_error());
+					}
+					else
+						$success2=1; 
+				}
+			}
+		}
 	}
+}
 ?>
 <div id="content">
 
@@ -372,8 +449,6 @@ if (!$success && $post)
 	echo '<p id="ad_error" style="color: red">*Invalid input. Try Again.</p>'; 
 else 
 	echo'<p id="ad_success" style="color:green">' . $success_msg . '</p>';
-
-
 ?>
 <br />
 <div class="submit">
@@ -403,6 +478,13 @@ else
 <tr><td><input type="checkbox" value="War" name="g17" /> War</td><td><input type="checkbox" value="Western" name="g18" /> Western</td></tr>
 </table>
 <input type="hidden" name="type" value="Movie" />
+<?php
+if (!$success2 && $post2)
+	echo '<p id="ad_error" style="color: red">'.$error_msg2.'</p>';
+else
+	echo'<p id="ad_success" style="color:green">' . $success_msg2 . '</p>';
+
+?>
 <br />
 <div class="submit">
 <button type="submit">Insert</button>
