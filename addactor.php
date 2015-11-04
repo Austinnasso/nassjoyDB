@@ -75,6 +75,20 @@ function dateFormat($date)
 	$newdate = $year . "-" . $mo . "-" . $day;
 	return $newdate;
 }
+
+function testName($name) {
+	if(empty($name))
+		return 1;
+	if(strlen($name)>20)
+		return 1;
+	else {
+		if(preg_match('/[a-zA-Z\'-]*/', $name) {
+			return 0;
+		}
+		else
+			return 1;
+	}
+}
 //CHECK IF FORM WAS SUBMITTED AND INSERT RECORD INTO DATABASE
 //ERROR INPUT CHECKS FOR ACTOR/DIRECTOR:
 //1. MAKE SURE ONLY ALPHABETICAL CHARACTERS, SPACES, AND APOSTROPHES ARE USED
@@ -91,13 +105,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	if ($table == "Actor" || $table == "Director")
 	{
 		
-		if (!empty($_POST['first']))
-			$first = test_input($_POST['first']); 
+		if (!empty($_POST['first'])) {
+			$first = test_input($_POST['first']);
+			$first_err=testName($first); 
+		}
 		else
 			$first_err = 1;
-			
-		if (!empty($_POST['last']))
+		$first_err=testName()
+		if (!empty($_POST['last'])) {
 			$last = test_input($_POST['last']);
+			$last_err=testName($last);
+		}
 		else
 			$last_err = 1;
 			
