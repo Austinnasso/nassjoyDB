@@ -324,21 +324,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				
 			}
 		}
-		else
-			echo "Incorrect input.";
-			
+	}
+	else if ($_POST['type'] == 'AddToMovie')
+	{
+		//$_POST['aod'] returns 'Actor' OR 'Director
+		//$_POST['a_first'] returns first name raw input
+		//$_POST['a_last'] returns last name raw input
+		//$_POST['a_title'] returns title name raw input
 		
-			
-			
-		
-		
-		
-		
-		
-		
-	}	
+		//TODO: Verify input is correct. Then check first name and last name against database to make sure
+		//actor or director exists. If doesn't exist, display a message "Actor doesn't match our records.", "Director doesn't match our records.",
+		//and/or "Movie doesn't match our records." If actor, director, and movie exist, grab their IDs and insert
+		//tuple into MovieActor and MovieDirector tables respectively. 
 
 
+
+
+
+
+	}
 ?>
 <div id="content">
 
@@ -419,6 +423,7 @@ else
 <tr><td>Last Name:</td> <td><input id="a_last" name="last" type="text" /></td></tr>
 <tr><td>Movie Title:</td> <td><input id="a_title" name="title" type="text" /></td></tr>
 </table>
+<input type="hidden" name="type" value="AddToMovie" />
 <div class="submit">
 <button type="submit">Insert</button>
 </div>

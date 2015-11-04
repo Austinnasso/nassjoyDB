@@ -16,8 +16,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 {
 	
 	$raw_input = explode(" ", $_GET['search_bar']); 
+	$sql = "SELECT * FROM Actor WHERE ";
 	foreach ($raw_input as $x)
-		echo $x . " AND"; 
+		$sql = $sql . "first
 	
 	
 }
