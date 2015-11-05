@@ -332,31 +332,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 		//tuple into MovieActor and MovieDirector tables respectively. 
 		$first = test_input($_POST['a_first']);
 		$first_err=testName($first); 
+		$title_err = $role_err = 0;
 		
 		$last = test_input($_POST['a_last']);
 		$last_err=testName($last);
+		
+		$title = $_POST['a_title'];
+		if (empty($title))
+			$title_err = 1;
+			
+		$role=test_input($_POST['a_role']);
+		if (empty($role))
+			$role_err = 1;
 		$success_msg2 = "";
 		$error_msg2 = "";
 		$post2=1;
 		$id_actor_director=$id_movie;
-		$role=test_input($_POST['a_role']);
 		$check_movie=$check_actor_director=0;
-		if(!$first_err&&!$last_err) {
-			$title = $_POST['a_title'];
+		if(!$first_err&&!$last_err&&!$title_err&&!$role_err) {
 			//person exist
 			$aod=$_POST['aod'];
 			if($aod=='Actor') {
 				$sql="SELECT * FROM Actor WHERE first='{$first}' AND last='{$last}'";
 				$result = mysql_query($sql, $db_connection);
-				if (!$result) {
+				if (mysql_num_rows($result) == 0) {
 					$error_msg2="Actor doesn't exist!";
 					$check_actor_director=1;
 				}
+				
 			}
 			else if($aod=='Director') {
 				$sql="SELECT * FROM Director WHERE first='{$first}' AND last='{$last}'";
 				$result = mysql_query($sql, $db_connection);
-				if (!$result) {
+				if (mysql_num_rows($result) == 0) {
 					$error_msg2="Director doesn't exist!";
 					$check_actor_director=1;
 				}
@@ -364,8 +372,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			//movie exist
 			$sql="SELECT * FROM Movie WHERE title='{$title}'";
 			$result = mysql_query($sql, $db_connection);
-			if (!$result) {
-				$error_msg2="Actor doesn't exist!";
+			if (mysql_num_rows($result) == 0) {
+				$error_msg2="Movie doesn't exist!";
 				$check_movie=1;
 			}
 			if(!$check_movie&&!$check_actor_director) {
@@ -373,7 +381,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				if($aod=='Director') {
 					$sql="SELECT mid FROM MovieDirector WHERE did=(SELECT id FROM Director WHERE first='{$first}' AND last='{$last}')";
 					$result = mysql_query($sql, $db_connection);
-					if($result) {
+					if (mysql_num_rows($result) == 0) {
 						$error_msg2="Director already exists in the specified movie!";
 						$check_actor_director=1;
 					}
@@ -381,7 +389,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 				if($aod=='Actor') {
 					$sql="SELECT mid FROM MovieActor WHERE aid=(SELECT id FROM Actor WHERE first='{$first}' AND last='{$last}')";
 					$result = mysql_query($sql, $db_connection);
-					if($result) {
+					if (mysql_num_rows($result) > 0) {
 						$error_msg2="Actor already exists in the specified movie!";
 						$check_actor_director=1;
 					}
@@ -483,13 +491,6 @@ else
 <tr><td><input type="checkbox" value="War" name="g17" /> War</td><td><input type="checkbox" value="Western" name="g18" /> Western</td></tr>
 </table>
 <input type="hidden" name="type" value="Movie" />
-<?php
-if (!$success2 && $post2)
-	echo '<p id="ad_error" style="color: red">'.$error_msg2.'</p>';
-else
-	echo'<p id="ad_success" style="color:green">' . $success_msg2 . '</p>';
-
-?>
 <br />
 <div class="submit">
 <button type="submit">Insert</button>
@@ -506,12 +507,19 @@ else
 <form method="post" name="addToMovie" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>">
 <table class="table-form">
 <tr><td>Select One: </td><td><select name="aod"><option value="Actor" selected="selected">Actor</option><option value="Director">Director</option></select></td></tr>
-<tr><td>First Name: </td><td><input id="a_first" name="first" type="text" /></td></tr>
-<tr><td>Last Name:</td> <td><input id="a_last" name="last" type="text" /></td></tr>
-<tr><td>Movie Title:</td> <td><input id="a_title" name="title" type="text" /></td></tr>
-<tr><td>Role:</td> <td><input id="a_role" name="role" type="text" /></td></tr>
+<tr><td>First Name: </td><td><input id="a_first" name="a_first" type="text" /></td></tr>
+<tr><td>Last Name:</td> <td><input id="a_last" name="a_last" type="text" /></td></tr>
+<tr><td>Movie Title:</td> <td><input id="a_title" name="a_title" type="text" /></td></tr>
+<tr><td>Role:</td> <td><input id="a_role" name="a_role" type="text" /></td></tr>
 </table>
 <input type="hidden" name="type" value="AddToMovie" />
+<?php
+if (!$success2 && $post2)
+	echo '<p id="ad_error" style="color: red">'.$error_msg2.'</p>';
+else
+	echo'<p id="ad_success" style="color:green">' . $success_msg2 . '</p>';
+
+?>
 <div class="submit">
 <button type="submit">Insert</button>
 </div>

@@ -285,3 +285,21 @@ a
 {
 	width: 80px;
 }
+
+a
+{
+	color: black;
+}
+
+a:hover
+{
+	text-decoration:underline;
+}
+
+.person_info
+{
+	font-size: 24px;
+	font-family:"Myriad Web Pro";
+	color:#222222;
+	text-align: CENTER;
+}

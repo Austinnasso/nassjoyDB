@@ -27,7 +27,7 @@ if(!$db_connection) {
 <div id="content">
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'GET')
+if ($_SERVER['REQUEST_METHOD'] == 'GET' && !empty($_GET['search_bar']))
 {
 	
 	$raw_input = explode(" ", $_GET['search_bar']); 
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 	$index = 1;
 	while ($row = mysql_fetch_array($actors, MYSQL_ASSOC)) 
 	{
-		echo "<p>{$index}. {$row['first']} {$row['last']}</p>";
+		echo "<p>{$index}. <a href='browse.php?id={$row['id']}&type=Person'>{$row['first']} {$row['last']}</a></p>";
 		$index++;
 	}
 	
@@ -85,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 	$index = 1;
 	while ($row = mysql_fetch_array($directors, MYSQL_ASSOC)) 
 	{
-		echo "<p>{$index}. {$row['first']} {$row['last']}</p>";
+		echo "<p>{$index}. <a href='browse.php?id={$row['id']}&type=Person'>{$row['first']} {$row['last']}</a></p>";
 		$index++;
 	}
 	
@@ -100,10 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET')
 	$index = 1;
 	while ($row = mysql_fetch_array($movies, MYSQL_ASSOC)) 
 	{
-		echo "<p>{$index}. {$row['title']}</p>";
+		echo "<p>{$index}. <a href='browse.php?id={$row['id']}&type=Movie'>{$row['title']}</a></p>";
 		$index++;
 	}
 }
+else
+	echo '<h1 class="search_header">Use search bar above to search our records!</h1>';
 
 ?>
 
