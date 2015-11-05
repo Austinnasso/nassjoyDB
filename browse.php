@@ -113,13 +113,17 @@ if(!$db_connection) {
 			//PRESENT MOVIES ACTED IN IN TABLE FORM
 			if ($isActor)
 			{
-				echo "<table class='info-table'><tr><th>Movie</th><th>Role</th><th>Year</th></tr>";
-				
 				$sql = "SELECT MovieActor.mid, MovieActor.aid, MovieActor.role, Movie.title, Movie.year FROM MovieActor INNER JOIN Movie ON MovieActor.mid = Movie.id WHERE MovieActor.aid ={$id}"; 
 				$movies = mysql_query($sql, $db_connection);
-				while ($row = mysql_fetch_array($movies, MYSQL_ASSOC))
-					echo "<tr><td>{$row['title']}</td><td><td>{$row['role']}</td><td>{$row['year']}</td></tr>";
-				echo "</table>"; 
+				if (!mysql_num_rows($movies))
+					echo "<h2>No movie roles on record.</h2>";
+				else
+				{
+					echo "<table class='info-table'><tr><th>Movie</th><th>Role</th><th>Year</th></tr>";
+					while ($row = mysql_fetch_array($movies, MYSQL_ASSOC))
+						echo "<tr><td>{$row['title']}</td><td>{$row['role']}</td><td>{$row['year']}</td></tr>";
+					echo "</table>"; 
+				}
 				
 				
 				
@@ -128,11 +132,16 @@ if(!$db_connection) {
 			if ($isDirector)
 			{
 				$sql = "SELECT MovieDirector.mid, MovieDirector.did, Movie.title, Movie.year FROM MovieDirector INNER JOIN Movie ON MovieDirector.mid = Movie.id WHERE MovieDirector.did ={$id}"; 
-				echo "<table class='info-table'><tr><th>Movies Directed</th><th>Year</th></tr>";
 				$movies = mysql_query($sql, $db_connection);
-				while ($row = mysql_fetch_array($movies, MYSQL_ASSOC))
-					echo "<tr><td>{$row['title']}</td><td>{$row['year']}</td></tr>";
-				echo "</table>"; 
+				if (!mysql_num_rows($movies))
+					echo "<h2>No movies directed on record.</h2>";
+				else
+				{
+					echo "<table class='info-table'><tr><th>Movies Directed</th><th>Year</th></tr>";
+					while ($row = mysql_fetch_array($movies, MYSQL_ASSOC))
+						echo "<tr><td>{$row['title']}</td><td style='width:100px;'>{$row['year']}</td></tr>";
+					echo "</table>"; 
+				}
 			
 				
 			}

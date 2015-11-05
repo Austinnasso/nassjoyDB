@@ -303,3 +303,23 @@ a:hover
 	color:#222222;
 	text-align: CENTER;
 }
+
+.info-table
+{
+	display: block;
+	margin: auto;
+	width: 650px;
+	
+}
+
+.info-table td, th
+{
+	width: 200px;
+	padding: 20px;
+	font-family:"Myriad Web Pro";
+}
+
+.info-table th
+{
+	font-size: 24px;
+}

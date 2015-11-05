@@ -451,7 +451,7 @@ Add </td><td><select onchange="toggleSex()" id="type" name="type"><option value=
 <table class="table-form">
 <tr><td>First Name: </td><td><input id="first" name="first" type="text" /></td></tr>
 <tr><td>Last Name:</td> <td><input id="last" name="last" type="text" /></td></tr>
-<tr id="sex-div"><td>Sex: </td><td><select id="sex" name="sex"><option value="M" selected="selected">Male</option><option value="F">Female</option></select></td></tr>
+<tr id="sex-div"><td>Sex: </td><td><select id="sex" name="sex"><option value="Male" selected="selected">Male</option><option value="Female">Female</option></select></td></tr>
 <tr><td>Date of Birth <br /><span style="font-size:10px">(MM/DD/YYYY)</span>: </td><td><input id="dob" name="dob" type="text" onfocus="dateForm(this)" /></td></tr>
 <tr><td>Date of Death <br /><span style="font-size:10px">(MM/DD/YYYY)</span>: </td><td><input id="dod" name="dod" type="text" onfocus="dateForm(this)"/></td></tr>
 </table>

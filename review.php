@@ -1,3 +1,20 @@
+<?php
+
+// Create connection
+$db_connection = mysql_connect("localhost", "cs143", "");
+mysql_select_db("CS143", $db_connection);
+
+if(!$db_connection) {
+    $errmsg = mysql_error($db_connection);
+    print "Connection failed: $errmsg <br />";
+    exit(1);
+}
+
+?>
+
+
+
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -44,11 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 			}
 			else {
 				$date = new DateTime();
-				$time_stamp=$date->getTimestamp();
 				$sql_getMovie="SELECT id FROM Movie WHERE title='{$title}'";
 				$value_mid=mysql_fetch_object(mysql_query($sql_getMovie));
 				$id_movie=$value_mid->id;
-				$sql = "INSERT INTO Review (name, time, mid, rating, comment) VALUES ('{$username}', '{$time_stamp}', '{$id_movie}', '{$rating}', '{$comment}')";
+				$sql = "INSERT INTO Review (name, time, mid, rating, comment) VALUES ('{$username}', NOW(), '{$id_movie}', '{$rating}', '{$comment}')";
 				$result = mysql_query($sql, $db_connection);
 				if (!$result) {
 					die('Invalid query: ' . mysql_error());
@@ -83,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
 
 if (!$success && $post)
 	echo '<p id="ad_error" style="color: red">'.$error_msg.'</p>'; 
-else 
+else if ($success && $post)
 	echo'<p id="ad_success" style="color:green">Review Successfully Inserted!</p>';
 ?>
 </form>
